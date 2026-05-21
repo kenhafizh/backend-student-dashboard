@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  name      String
+  nis       String   @unique
+  class     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendances Attendance[]
+  violations  Violation[]
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  studentId String
+  date      DateTime
+  status    Status
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model Violation {
+  id            String        @id @default(uuid())
+  studentId     String
+  violationType ViolationType
+  actionType    ActionType
+  point         Int
+  description   String
+  date          DateTime
+  createdAt     DateTime      @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+enum Status {
+  present
+  absent
+  late
+  izin
+}
+
+enum ViolationType {
+  UNIFORM
+  LATE
+  PHONE
+  SKIP_CLASS
+  OTHER
+}
+
+enum ActionType {
+  VERBAL_WARNING
+  WARNING_LETTER
+  PARENT_SUMMONS
+  SUSPENSION
+}
