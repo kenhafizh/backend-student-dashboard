@@ -13,10 +13,10 @@ import {
 export const attendanceController = {
   create: async (req: Request, res: Response) => {
     try {
-      if (req.body.classId && (req.body.attendance || req.body.absensi)) {
+      if (req.body.classId && req.body.attendance) {
         const attendance = await createBulkAttendance(req.body);
         return res.status(201).send({
-          message: "Absensi berhasil dibuat",
+          message: "Data absensi berhasil diproses",
           data: attendance,
         });
       }

@@ -107,7 +107,10 @@ export const getAllAttendances = async (date: string, classId: string) => {
   }
 
   const queryDate = new Date(date);
-  const data = await attendanceRepository.findAllByDateAndClassId(queryDate, classId);
+  const data = await attendanceRepository.findAllByDateAndClassId(
+    queryDate,
+    classId,
+  );
   return data.map((item) => ({
     id: item.id,
     studentId: item.studentId,
