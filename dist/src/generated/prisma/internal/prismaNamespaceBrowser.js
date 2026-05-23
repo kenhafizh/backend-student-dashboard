@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryMode = exports.SortOrder = exports.ViolationScalarFieldEnum = exports.AttendanceScalarFieldEnum = exports.StudentScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.ViolationScalarFieldEnum = exports.AttendanceScalarFieldEnum = exports.StudentScalarFieldEnum = exports.ClassScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -75,6 +75,7 @@ exports.JsonNull = runtime.JsonNull;
  */
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
+    Class: 'Class',
     Student: 'Student',
     Attendance: 'Attendance',
     Violation: 'Violation'
@@ -88,11 +89,17 @@ exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
 });
+exports.ClassScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
 exports.StudentScalarFieldEnum = {
     id: 'id',
     name: 'name',
     nis: 'nis',
-    class: 'class',
+    classId: 'classId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -106,7 +113,9 @@ exports.AttendanceScalarFieldEnum = {
 exports.ViolationScalarFieldEnum = {
     id: 'id',
     studentId: 'studentId',
-    type: 'type',
+    violationType: 'violationType',
+    actionType: 'actionType',
+    point: 'point',
     description: 'description',
     date: 'date',
     createdAt: 'createdAt'
@@ -118,4 +127,8 @@ exports.SortOrder = {
 exports.QueryMode = {
     default: 'default',
     insensitive: 'insensitive'
+};
+exports.NullsOrder = {
+    first: 'first',
+    last: 'last'
 };

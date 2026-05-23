@@ -11,15 +11,17 @@ const getAllStudents = async () => {
 };
 exports.getAllStudents = getAllStudents;
 const createStudent = async (newStudentData) => {
-    const { name, nis, class: studentClass } = newStudentData;
-    if (!name || !nis || !studentClass) {
-        throw new Error("Fields 'name', 'nis', and 'studentClass' are required.");
+    const { name, nis, classId } = newStudentData;
+    if (!name || !nis || !classId) {
+        throw new Error("Fields 'name', 'nis', and 'classId' are required.");
     }
     const student = await db_1.prisma.student.create({
         data: {
             name,
             nis,
-            class: studentClass,
+            class: {
+                connect: { id: classId },
+            },
         },
     });
     return student;

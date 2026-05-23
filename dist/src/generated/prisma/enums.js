@@ -9,10 +9,23 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Status = void 0;
+exports.ActionType = exports.ViolationType = exports.Status = void 0;
 exports.Status = {
-    present: 'present',
-    absent: 'absent',
-    late: 'late',
-    izin: 'izin'
+    HADIR: 'HADIR',
+    SAKIT: 'SAKIT',
+    IZIN: 'IZIN',
+    ALPHA: 'ALPHA'
+};
+exports.ViolationType = {
+    UNIFORM: 'UNIFORM',
+    LATE: 'LATE',
+    PHONE: 'PHONE',
+    SKIP_CLASS: 'SKIP_CLASS',
+    OTHER: 'OTHER'
+};
+exports.ActionType = {
+    VERBAL_WARNING: 'VERBAL_WARNING',
+    WARNING_LETTER: 'WARNING_LETTER',
+    PARENT_SUMMONS: 'PARENT_SUMMONS',
+    SUSPENSION: 'SUSPENSION'
 };

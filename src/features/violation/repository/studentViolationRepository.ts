@@ -21,18 +21,6 @@ const findById = async (id: string, tx: PrismaTx = prisma) => {
   });
 };
 
-const findByStudentId = async (studentId: string, tx: PrismaTx = prisma) => {
-  return tx.violation.findMany({
-    where: { studentId },
-    include: {
-      student: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-};
-
 const create = async (
   data: Prisma.ViolationCreateInput,
   tx: PrismaTx = prisma,
@@ -68,7 +56,6 @@ const deleteViolation = async (id: string, tx: PrismaTx = prisma) => {
 export default {
   findAll,
   findById,
-  findByStudentId,
   create,
   update,
   deleteViolation,

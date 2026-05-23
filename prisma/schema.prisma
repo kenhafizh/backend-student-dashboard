@@ -12,14 +12,24 @@ datasource db {
   provider = "postgresql"
 }
 
+model Class {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+}
+
 model Student {
   id        String   @id @default(uuid())
   name      String
   nis       String   @unique
-  class     String
+  classId   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  class       Class?       @relation(fields: [classId], references: [id])
   attendances Attendance[]
   violations  Violation[]
 }
@@ -31,7 +41,7 @@ model Attendance {
   status    Status
   createdAt DateTime @default(now())
 
-  student Student @relation(fields: [studentId], references: [id])
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model Violation {
@@ -44,14 +54,14 @@ model Violation {
   date          DateTime
   createdAt     DateTime      @default(now())
 
-  student Student @relation(fields: [studentId], references: [id])
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 enum Status {
-  present
-  absent
-  late
-  izin
+  HADIR
+  SAKIT
+  IZIN
+  ALPHA
 }
 
 enum ViolationType {

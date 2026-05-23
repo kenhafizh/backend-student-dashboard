@@ -28,8 +28,8 @@ export const getAllViolations = async () => {
   const data = await studentViolationRepository.findAll();
   return data.map((item) => ({
     id: item.id,
-    name: item.student.name, // Hanya mengembalikan nama siswa untuk setiap pelanggaran yang diambil dari students dengan cara mapping
-    class: item.student.class,
+    name: item.student.name,
+    classId: item.student.classId,
     violationType: item.violationType,
     point: item.point,
     actionType: item.actionType,
@@ -44,14 +44,6 @@ export const getViolationById = async (id: string) => {
     throw new Error("Pelanggaran tidak ditemukan");
   }
   return violation;
-};
-
-export const getViolationsByStudentId = async (studentId: string) => {
-  const student = await studentRepository.findById(studentId);
-  if (!student) {
-    throw new Error("Siswa tidak ditemukan");
-  }
-  return studentViolationRepository.findByStudentId(studentId);
 };
 
 export const createViolation = async (

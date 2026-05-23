@@ -8,8 +8,20 @@ const findStudents = async () => {
 const findById = async (id, tx = db_1.prisma) => {
     return tx.student.findUnique({ where: { id } });
 };
+const findByIds = async (ids, tx = db_1.prisma) => {
+    return tx.student.findMany({
+        where: { id: { in: ids } },
+    });
+};
 const update = async (id, data, tx = db_1.prisma) => {
-    return tx.student.update({ where: { id }, data });
+    const updateData = {};
+    if (data.name)
+        updateData.name = data.name;
+    if (data.nis)
+        updateData.nis = data.nis;
+    if (data.classId)
+        updateData.class = { connect: { id: data.classId } };
+    return tx.student.update({ where: { id }, data: updateData });
 };
 const deleteStudent = async (id, tx = db_1.prisma) => {
     return tx.student.delete({ where: { id } });
@@ -17,6 +29,7 @@ const deleteStudent = async (id, tx = db_1.prisma) => {
 exports.default = {
     findStudents,
     findById,
+    findByIds,
     update,
     deleteStudent,
 };
