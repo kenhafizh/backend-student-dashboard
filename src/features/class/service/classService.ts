@@ -1,4 +1,4 @@
-import { classRepository } from "../repository/classRepository.js";
+import { classRepository } from "../repository/classRepository";
 
 export const classService = {
 	getAll: async () => {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { classService } from "../service/classService.js";
+import { classService } from "../service/classService";
 
 export const classController = {
 	getAll: async (req: Request, res: Response) => {
