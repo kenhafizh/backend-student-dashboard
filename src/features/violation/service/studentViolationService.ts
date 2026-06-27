@@ -3,23 +3,22 @@ import studentRepository from "../../student/repository/studentRepository";
 import { prisma } from "../../../db";
 import type {
   Violation,
-  ViolationType,
-  ActionType,
+  Level,
 } from "../../../generated/prisma/client";
 
 interface CreateViolationInput {
   studentId: string;
-  violationType: ViolationType;
-  actionType: ActionType;
-  point: number;
+  violationType: string;
+  level: Level;
+  information: string;
   description: string;
   date: string | Date;
 }
 
 interface UpdateViolationInput {
-  violationType?: ViolationType;
-  actionType?: ActionType;
-  point?: number;
+  violationType?: string;
+  level?: Level;
+  information?: string;
   description?: string;
   date?: string | Date;
 }
@@ -29,10 +28,11 @@ export const getAllViolations = async () => {
   return data.map((item) => ({
     id: item.id,
     name: item.student.name,
+    studentId: item.student.id,
     classId: item.student.classId,
     violationType: item.violationType,
-    point: item.point,
-    actionType: item.actionType,
+    information: item.information,
+    level: item.level,
     description: item.description,
     date: item.date,
   }));
@@ -50,19 +50,19 @@ export const createViolation = async (
   input: CreateViolationInput,
 ): Promise<void> => {
   // Promise void agar tidak mengembalikan return value jika data response tidak dipakai
-  const { studentId, violationType, actionType, point, description, date } =
+  const { studentId, violationType, level, information, description, date } =
     input;
 
   if (
     !studentId ||
     !violationType ||
-    !actionType ||
-    point === undefined ||
+    !level ||
+    !information ||
     !description ||
     !date
   ) {
     throw new Error(
-      "Field 'studentId', 'violationType', 'actionType', 'point', 'description', dan 'date' wajib diisi",
+      "Field 'studentId', 'violationType', 'level', 'information', 'description', dan 'date' wajib diisi",
     );
   }
 
@@ -73,8 +73,8 @@ export const createViolation = async (
 
   await studentViolationRepository.create({
     violationType,
-    actionType,
-    point,
+    level,
+    information,
     description,
     date: new Date(date),
     student: {
@@ -93,16 +93,16 @@ export const updateViolation = async (
   }
 
   const updateData: {
-    violationType?: ViolationType;
-    actionType?: ActionType;
-    point?: number;
+    violationType?: string;
+    level?: Level;
+    information?: string;
     description?: string;
     date?: Date;
   } = {};
 
   if (input.violationType) updateData.violationType = input.violationType;
-  if (input.actionType) updateData.actionType = input.actionType;
-  if (input.point !== undefined) updateData.point = input.point;
+  if (input.level) updateData.level = input.level;
+  if (input.information) updateData.information = input.information;
   if (input.description) updateData.description = input.description;
   if (input.date) updateData.date = new Date(input.date);
 

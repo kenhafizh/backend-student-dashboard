@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classController = void 0;
-const classService_js_1 = require("../service/classService.js");
+const classService_1 = require("../service/classService");
 exports.classController = {
     getAll: async (req, res) => {
         try {
-            const classes = await classService_js_1.classService.getAll();
+            const classes = await classService_1.classService.getAll();
             res.send({
                 message: "Berhasil mengambil data kelas",
                 data: classes,
@@ -19,7 +19,7 @@ exports.classController = {
     getById: async (req, res) => {
         try {
             const { id } = req.params;
-            const classData = await classService_js_1.classService.getById(id);
+            const classData = await classService_1.classService.getById(id);
             res.send({
                 message: "Berhasil mengambil data kelas",
                 data: classData,

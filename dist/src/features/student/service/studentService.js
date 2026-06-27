@@ -6,8 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getAllStudents = void 0;
 const studentRepository_1 = __importDefault(require("../repository/studentRepository"));
 const db_1 = require("../../../db");
-const getAllStudents = async () => {
-    return studentRepository_1.default.findStudents();
+const getAllStudents = async (classId) => {
+    const students = await studentRepository_1.default.findStudents(classId);
+    return students.map((student) => ({
+        id: student.id,
+        name: student.name,
+        nis: student.nis,
+        classId: student.classId,
+        className: student.class?.name || "-",
+    }));
 };
 exports.getAllStudents = getAllStudents;
 const createStudent = async (newStudentData) => {
@@ -15,7 +22,7 @@ const createStudent = async (newStudentData) => {
     if (!name || !nis || !classId) {
         throw new Error("Fields 'name', 'nis', and 'classId' are required.");
     }
-    const student = await db_1.prisma.student.create({
+    await db_1.prisma.student.create({
         data: {
             name,
             nis,
@@ -23,8 +30,10 @@ const createStudent = async (newStudentData) => {
                 connect: { id: classId },
             },
         },
+        include: {
+            class: true,
+        },
     });
-    return student;
 };
 exports.createStudent = createStudent;
 const updateStudent = async (id, updateData) => {

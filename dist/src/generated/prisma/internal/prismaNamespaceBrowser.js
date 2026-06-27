@@ -114,8 +114,8 @@ exports.ViolationScalarFieldEnum = {
     id: 'id',
     studentId: 'studentId',
     violationType: 'violationType',
-    actionType: 'actionType',
-    point: 'point',
+    level: 'level',
+    information: 'information',
     description: 'description',
     date: 'date',
     createdAt: 'createdAt'

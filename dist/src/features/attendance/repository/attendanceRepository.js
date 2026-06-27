@@ -117,6 +117,31 @@ const findAllByDateRange = async (startDate, endDate, tx = db_1.prisma) => {
         },
     });
 };
+const findAllByDateAndClassId = async (date, classId, tx = db_1.prisma) => {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    return tx.attendance.findMany({
+        where: {
+            date: {
+                gte: startOfDay,
+                lte: endOfDay,
+            },
+            student: {
+                classId: classId,
+            },
+        },
+        include: {
+            student: true,
+        },
+        orderBy: {
+            student: {
+                name: "asc",
+            },
+        },
+    });
+};
 exports.default = {
     findAll,
     findById,
@@ -130,4 +155,5 @@ exports.default = {
     findByIds,
     findByStudentIdsAndDate,
     createBulk,
+    findAllByDateAndClassId,
 };

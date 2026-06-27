@@ -13,8 +13,8 @@ const getAllViolations = async () => {
         name: item.student.name,
         classId: item.student.classId,
         violationType: item.violationType,
-        point: item.point,
-        actionType: item.actionType,
+        information: item.information,
+        level: item.level,
         description: item.description,
         date: item.date,
     }));
@@ -30,14 +30,14 @@ const getViolationById = async (id) => {
 exports.getViolationById = getViolationById;
 const createViolation = async (input) => {
     // Promise void agar tidak mengembalikan return value jika data response tidak dipakai
-    const { studentId, violationType, actionType, point, description, date } = input;
+    const { studentId, violationType, level, information, description, date } = input;
     if (!studentId ||
         !violationType ||
-        !actionType ||
-        point === undefined ||
+        !level ||
+        !information ||
         !description ||
         !date) {
-        throw new Error("Field 'studentId', 'violationType', 'actionType', 'point', 'description', dan 'date' wajib diisi");
+        throw new Error("Field 'studentId', 'violationType', 'level', 'information', 'description', dan 'date' wajib diisi");
     }
     const student = await studentRepository_1.default.findById(studentId);
     if (!student) {
@@ -45,8 +45,8 @@ const createViolation = async (input) => {
     }
     await studentViolationRepository_1.default.create({
         violationType,
-        actionType,
-        point,
+        level,
+        information,
         description,
         date: new Date(date),
         student: {
@@ -63,10 +63,10 @@ const updateViolation = async (id, input) => {
     const updateData = {};
     if (input.violationType)
         updateData.violationType = input.violationType;
-    if (input.actionType)
-        updateData.actionType = input.actionType;
-    if (input.point !== undefined)
-        updateData.point = input.point;
+    if (input.level)
+        updateData.level = input.level;
+    if (input.information)
+        updateData.information = input.information;
     if (input.description)
         updateData.description = input.description;
     if (input.date)

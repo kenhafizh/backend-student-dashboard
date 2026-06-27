@@ -45,14 +45,14 @@ model Attendance {
 }
 
 model Violation {
-  id            String        @id @default(uuid())
+  id            String   @id @default(uuid())
   studentId     String
-  violationType ViolationType
-  actionType    ActionType
-  point         Int
+  violationType String
+  level         Level
+  information   String
   description   String
   date          DateTime
-  createdAt     DateTime      @default(now())
+  createdAt     DateTime @default(now())
 
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
@@ -64,17 +64,8 @@ enum Status {
   ALPHA
 }
 
-enum ViolationType {
-  UNIFORM
-  LATE
-  PHONE
-  SKIP_CLASS
-  OTHER
-}
-
-enum ActionType {
-  VERBAL_WARNING
-  WARNING_LETTER
-  PARENT_SUMMONS
-  SUSPENSION
+enum Level {
+  LEVEL_1
+  LEVEL_2
+  LEVEL_3
 }

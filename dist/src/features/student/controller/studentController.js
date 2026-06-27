@@ -18,7 +18,8 @@ exports.studentController = {
     },
     getAll: async (req, res) => {
         try {
-            const students = await (0, studentService_1.getAllStudents)();
+            const { classId } = req.query;
+            const students = await (0, studentService_1.getAllStudents)(classId);
             res.send({
                 message: "Berhasil mengambil data siswa",
                 data: students,

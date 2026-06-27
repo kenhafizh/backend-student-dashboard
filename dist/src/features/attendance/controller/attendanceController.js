@@ -5,15 +5,15 @@ const attendanceService_1 = require("../service/attendanceService");
 exports.attendanceController = {
     create: async (req, res) => {
         try {
-            if (req.body.classId && req.body.absensi) {
+            if (req.body.classId && req.body.attendance) {
                 const attendance = await (0, attendanceService_1.createBulkAttendance)(req.body);
-                res.status(201).send({
-                    message: "Absensi berhasil dibuat",
+                return res.status(201).send({
+                    message: "Data absensi berhasil diproses",
                     data: attendance,
                 });
             }
             const attendance = await (0, attendanceService_1.createAttendance)(req.body);
-            res.status(201).send({
+            return res.status(201).send({
                 message: "Absensi berhasil dibuat",
                 data: attendance,
             });
@@ -24,8 +24,14 @@ exports.attendanceController = {
         }
     },
     getAll: async (req, res) => {
+        const { date, classId } = req.query;
+        if (!date || !classId) {
+            return res
+                .status(400)
+                .send({ message: "Tanggal dan Class ID wajib diisi" });
+        }
         try {
-            const attendances = await (0, attendanceService_1.getAllAttendances)();
+            const attendances = await (0, attendanceService_1.getAllAttendances)(date, classId);
             res.send({
                 message: "Berhasil mengambil data absensi",
                 data: attendances,

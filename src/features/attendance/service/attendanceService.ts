@@ -107,19 +107,26 @@ export const getAllAttendances = async (date: string, classId: string) => {
   }
 
   const queryDate = new Date(date);
-  const data = await attendanceRepository.findAllByDateAndClassId(
-    queryDate,
-    classId,
-  );
-  return data.map((item) => ({
-    id: item.id,
-    studentId: item.studentId,
-    name: item.student.name,
-    nis: item.student.nis,
-    classId: item.student.classId,
-    status: item.status,
-    date: item.date,
-  }));
+
+  const [students, attendances] = await Promise.all([
+    studentRepository.findStudents(classId),
+    attendanceRepository.findAllByDateAndClassId(queryDate, classId),
+  ]);
+
+  const attendanceMap = new Map(attendances.map((a) => [a.studentId, a]));
+
+  return students.map((student) => {
+    const attendance = attendanceMap.get(student.id);
+    return {
+      id: attendance?.id ?? null,
+      studentId: student.id,
+      name: student.name,
+      nis: student.nis,
+      classId: student.classId,
+      status: attendance?.status ?? null,
+      date: attendance?.date ?? null,
+    };
+  });
 };
 
 const getAttendanceById = async (id: string) => {

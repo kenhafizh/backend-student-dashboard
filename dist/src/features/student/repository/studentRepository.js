@@ -1,8 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../../../db");
-const findStudents = async () => {
-    const students = await db_1.prisma.student.findMany();
+const findStudents = async (classId) => {
+    const where = classId ? { classId } : {};
+    const students = await db_1.prisma.student.findMany({
+        where,
+        include: {
+            class: true,
+        },
+        orderBy: {
+            name: "asc",
+        },
+    });
     return students;
 };
 const findById = async (id, tx = db_1.prisma) => {

@@ -7,24 +7,26 @@ exports.createBulkAttendance = exports.getStudentAttendanceAccumulation = export
 const attendanceRepository_1 = __importDefault(require("../repository/attendanceRepository"));
 const studentRepository_1 = __importDefault(require("../../student/repository/studentRepository"));
 const createBulkAttendance = async (input) => {
-    const { tanggal, classId, absensi } = input;
+    const date = input.date || input.tanggal;
+    const classId = input.classId;
+    const attendance = input.attendance;
     // Validasi input
-    if (!tanggal || !classId || !absensi || absensi.length === 0) {
-        throw new Error("Field 'tanggal', 'classId', dan 'absensi' wajib diisi");
+    if (!date || !classId || !attendance || attendance.length === 0) {
+        throw new Error("Field 'date', 'classId', dan 'attendance' wajib diisi");
     }
     // Validasi status
     const validStatuses = ["HADIR", "SAKIT", "IZIN", "ALPHA"];
-    for (const item of absensi) {
+    for (const item of attendance) {
         if (!validStatuses.includes(item.status)) {
             throw new Error(`Status '${item.status}' tidak valid`);
         }
     }
-    const attendanceDate = new Date(tanggal);
+    const attendanceDate = new Date(date);
     attendanceDate.setHours(0, 0, 0, 0);
     // Validasi semua students ada di class yang diminta
-    const studentIds = absensi.map((a) => a.studentId);
+    const studentIds = attendance.map((a) => a.studentId);
     const students = await studentRepository_1.default.findByIds(studentIds);
-    for (const item of absensi) {
+    for (const item of attendance) {
         const student = students.find((s) => s.id === item.studentId);
         if (!student) {
             throw new Error(`Siswa dengan ID '${item.studentId}' tidak ditemukan`);
@@ -42,7 +44,7 @@ const createBulkAttendance = async (input) => {
         throw new Error(`Siswa ${duplicateNames} sudah tercatat absensi pada tanggal tersebut`);
     }
     // Bulk create attendance
-    const attendanceData = absensi.map((item) => ({
+    const attendanceData = attendance.map((item) => ({
         studentId: item.studentId,
         status: item.status,
         date: attendanceDate,
@@ -59,17 +61,28 @@ const createBulkAttendance = async (input) => {
     }));
 };
 exports.createBulkAttendance = createBulkAttendance;
-const getAllAttendances = async () => {
-    const data = await attendanceRepository_1.default.findAll();
-    return data.map((item) => ({
-        id: item.id,
-        studentId: item.studentId,
-        name: item.student.name,
-        nis: item.student.nis,
-        classId: item.student.classId,
-        status: item.status,
-        date: item.date,
-    }));
+const getAllAttendances = async (date, classId) => {
+    if (!date || !classId) {
+        throw new Error("Parameter 'date' dan 'classId' wajib diisi");
+    }
+    const queryDate = new Date(date);
+    const [students, attendances] = await Promise.all([
+        studentRepository_1.default.findStudents(classId),
+        attendanceRepository_1.default.findAllByDateAndClassId(queryDate, classId),
+    ]);
+    const attendanceMap = new Map(attendances.map((a) => [a.studentId, a]));
+    return students.map((student) => {
+        const attendance = attendanceMap.get(student.id);
+        return {
+            id: attendance?.id ?? null,
+            studentId: student.id,
+            name: student.name,
+            nis: student.nis,
+            classId: student.classId,
+            status: attendance?.status ?? null,
+            date: attendance?.date ?? null,
+        };
+    });
 };
 exports.getAllAttendances = getAllAttendances;
 const getAttendanceById = async (id) => {
