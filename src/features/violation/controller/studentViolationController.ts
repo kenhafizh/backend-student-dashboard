@@ -6,6 +6,7 @@ import {
   updateViolation,
   deleteViolation,
 } from "../service/studentViolationService";
+import { getViolationRecapitulation } from "../service/violationRecapitulationService";
 
 export const studentViolationController = {
   create: async (req: Request, res: Response) => {
@@ -54,6 +55,24 @@ export const studentViolationController = {
       await deleteViolation(id as string);
       res.send({
         message: "Pelanggaran berhasil dihapus",
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Terjadi kesalahan";
+      res.status(400).send({ message });
+    }
+  },
+
+  getRecapitulation: async (req: Request, res: Response) => {
+    try {
+      const { startMonth, endMonth, year } = req.query;
+      const recapitulation = await getViolationRecapitulation(
+        startMonth ? parseInt(startMonth as string) : undefined,
+        endMonth ? parseInt(endMonth as string) : undefined,
+        year ? parseInt(year as string) : undefined,
+      );
+      res.send({
+        message: "Berhasil mengambil data rekapitulasi pelanggaran",
+        data: recapitulation,
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Terjadi kesalahan";

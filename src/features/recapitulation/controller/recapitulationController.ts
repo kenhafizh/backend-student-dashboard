@@ -4,9 +4,10 @@ import { getRecapitulation } from "../service/recapitulationService";
 export const recapitulationController = {
   getRecapitulation: async (req: Request, res: Response) => {
     try {
-      const { month, year } = req.query;
+      const { startMonth, endMonth, year } = req.query;
       const recapitulation = await getRecapitulation(
-        month ? parseInt(month as string) : undefined,
+        startMonth ? parseInt(startMonth as string) : undefined,
+        endMonth ? parseInt(endMonth as string) : undefined,
         year ? parseInt(year as string) : undefined,
       );
       res.send({

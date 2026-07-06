@@ -53,10 +53,33 @@ const deleteViolation = async (id: string, tx: PrismaTx = prisma) => {
   });
 };
 
+const getViolationsByDateRange = async (
+  startDate: Date,
+  endDate: Date,
+  tx: PrismaTx = prisma,
+) => {
+  return tx.violation.findMany({
+    where: {
+      date: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    include: {
+      student: {
+        include: {
+          class: true,
+        },
+      },
+    },
+  });
+};
+
 export default {
   findAll,
   findById,
   create,
   update,
   deleteViolation,
+  getViolationsByDateRange,
 };
