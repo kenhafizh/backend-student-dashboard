@@ -47,6 +47,13 @@ export const createStudent = async (
   });
 };
 
+export const createManyStudents = async (
+  students: CreateStudentInput[],
+): Promise<void> => {
+  if (!students || students.length === 0) return;
+  await studentRepository.createMany(students);
+};
+
 export const updateStudent = async (
   id: string,
   updateData: UpdateStudentInput,

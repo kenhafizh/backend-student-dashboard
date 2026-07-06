@@ -12,16 +12,9 @@ const classData = [
 	{ name: "7C" },
 	{ name: "7D" },
 	{ name: "7E" },
-	{ name: "8A" },
-	{ name: "8B" },
-	{ name: "8C" },
-	{ name: "8D" },
-	{ name: "8E" },
-	{ name: "9A" },
-	{ name: "9B" },
-	{ name: "9C" },
-	{ name: "9D" },
-	{ name: "9E" },
+	{ name: "7F" },
+	{ name: "7G" },
+	{ name: "7H" },
 ];
 
 async function main() {

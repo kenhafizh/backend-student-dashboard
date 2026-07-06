@@ -44,10 +44,18 @@ const deleteStudent = async (id: string, tx: PrismaTx = prisma) => {
 	return tx.student.delete({ where: { id } });
 };
 
+const createMany = async (
+	data: { name: string; nis: string; classId: string }[],
+	tx: PrismaTx = prisma,
+) => {
+	return tx.student.createMany({ data });
+};
+
 export default {
 	findStudents,
 	findById,
 	findByIds,
 	update,
 	deleteStudent,
+	createMany,
 };

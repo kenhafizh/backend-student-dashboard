@@ -20,6 +20,23 @@ export const studentController = {
 		}
 	},
 
+	createMany: async (req: Request, res: Response) => {
+		try {
+			const { students } = req.body;
+			if (!students || !Array.isArray(students)) {
+				return res.status(400).send({ message: "Data students tidak valid" });
+			}
+			// Use the new createManyStudents function (need to import it)
+			await require("../service/studentService").createManyStudents(students);
+			res.status(201).send({
+				message: `Berhasil import ${students.length} data siswa`,
+			});
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Terjadi kesalahan";
+			res.status(400).send({ message });
+		}
+	},
+
 	getAll: async (req: Request, res: Response) => {
 		try {
 			const { classId } = req.query;

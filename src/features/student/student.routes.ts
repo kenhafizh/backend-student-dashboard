@@ -3,6 +3,7 @@ import { studentController } from "./controller/studentController";
 
 const router = Router();
 
+router.post("/student/bulk", studentController.createMany);
 router.post("/student", studentController.create);
 router.get("/student", studentController.getAll);
 router.put("/student/:id", studentController.update);
