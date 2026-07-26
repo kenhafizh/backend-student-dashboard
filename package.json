@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nodemon --watch src --ext ts,json --exec \"npx ts-node src/index.ts\"",
     "build": "tsc",
-    "start": "prisma migrate deploy && node dist/index.js",
+    "start": "prisma migrate deploy && node dist/src/index.js",
     "postinstall": "prisma generate"
   },
   "keywords": [],
