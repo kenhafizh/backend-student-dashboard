@@ -41,10 +41,28 @@ const deleteViolation = async (id, tx = db_1.prisma) => {
         where: { id },
     });
 };
+const getViolationsByDateRange = async (startDate, endDate, tx = db_1.prisma) => {
+    return tx.violation.findMany({
+        where: {
+            date: {
+                gte: startDate,
+                lte: endDate,
+            },
+        },
+        include: {
+            student: {
+                include: {
+                    class: true,
+                },
+            },
+        },
+    });
+};
 exports.default = {
     findAll,
     findById,
     create,
     update,
     deleteViolation,
+    getViolationsByDateRange,
 };

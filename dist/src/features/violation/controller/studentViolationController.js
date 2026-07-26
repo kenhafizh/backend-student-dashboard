@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.studentViolationController = void 0;
 const studentViolationService_1 = require("../service/studentViolationService");
+const violationRecapitulationService_1 = require("../service/violationRecapitulationService");
 exports.studentViolationController = {
     create: async (req, res) => {
         try {
@@ -49,6 +50,20 @@ exports.studentViolationController = {
             await (0, studentViolationService_1.deleteViolation)(id);
             res.send({
                 message: "Pelanggaran berhasil dihapus",
+            });
+        }
+        catch (err) {
+            const message = err instanceof Error ? err.message : "Terjadi kesalahan";
+            res.status(400).send({ message });
+        }
+    },
+    getRecapitulation: async (req, res) => {
+        try {
+            const { startMonth, endMonth, year } = req.query;
+            const recapitulation = await (0, violationRecapitulationService_1.getViolationRecapitulation)(startMonth ? parseInt(startMonth) : undefined, endMonth ? parseInt(endMonth) : undefined, year ? parseInt(year) : undefined);
+            res.send({
+                message: "Berhasil mengambil data rekapitulasi pelanggaran",
+                data: recapitulation,
             });
         }
         catch (err) {

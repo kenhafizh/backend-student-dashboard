@@ -5,6 +5,7 @@ const studentViolationController_1 = require("./controller/studentViolationContr
 const router = (0, express_1.Router)();
 router.post("/student-violation", studentViolationController_1.studentViolationController.create);
 router.get("/student-violation", studentViolationController_1.studentViolationController.getAll);
+router.get("/student-violation/recapitulation", studentViolationController_1.studentViolationController.getRecapitulation);
 router.put("/student-violation/:id", studentViolationController_1.studentViolationController.update);
 router.delete("/student-violation/:id", studentViolationController_1.studentViolationController.delete);
 exports.default = router;

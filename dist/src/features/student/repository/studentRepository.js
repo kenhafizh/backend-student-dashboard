@@ -35,10 +35,14 @@ const update = async (id, data, tx = db_1.prisma) => {
 const deleteStudent = async (id, tx = db_1.prisma) => {
     return tx.student.delete({ where: { id } });
 };
+const createMany = async (data, tx = db_1.prisma) => {
+    return tx.student.createMany({ data });
+};
 exports.default = {
     findStudents,
     findById,
     findByIds,
     update,
     deleteStudent,
+    createMany,
 };

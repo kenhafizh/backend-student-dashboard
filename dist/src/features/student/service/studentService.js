@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getAllStudents = void 0;
+exports.deleteStudent = exports.updateStudent = exports.createManyStudents = exports.createStudent = exports.getAllStudents = void 0;
 const studentRepository_1 = __importDefault(require("../repository/studentRepository"));
 const db_1 = require("../../../db");
 const getAllStudents = async (classId) => {
@@ -36,6 +36,12 @@ const createStudent = async (newStudentData) => {
     });
 };
 exports.createStudent = createStudent;
+const createManyStudents = async (students) => {
+    if (!students || students.length === 0)
+        return;
+    await studentRepository_1.default.createMany(students);
+};
+exports.createManyStudents = createManyStudents;
 const updateStudent = async (id, updateData) => {
     const existing = await studentRepository_1.default.findById(id);
     if (!existing) {

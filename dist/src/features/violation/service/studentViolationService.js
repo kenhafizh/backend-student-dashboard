@@ -11,6 +11,7 @@ const getAllViolations = async () => {
     return data.map((item) => ({
         id: item.id,
         name: item.student.name,
+        studentId: item.student.id,
         classId: item.student.classId,
         violationType: item.violationType,
         information: item.information,

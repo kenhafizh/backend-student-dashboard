@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const studentController_1 = require("./controller/studentController");
 const router = (0, express_1.Router)();
+router.post("/student/bulk", studentController_1.studentController.createMany);
 router.post("/student", studentController_1.studentController.create);
 router.get("/student", studentController_1.studentController.getAll);
 router.put("/student/:id", studentController_1.studentController.update);
