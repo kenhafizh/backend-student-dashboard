@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk curl *)",
+      "Bash(python3 -c ' *)",
+      "Bash(rm /Users/kenhafizh/Coding/Project/backend-attendance-student-dashboard/scratch_delete_students.ts *)"
+    ],
+    "additionalDirectories": [
+      "/Users/kenhafizh/Coding/Project/backend-attendance-student-dashboard"
+    ]
+  }
+}
