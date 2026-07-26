@@ -7,5 +7,5 @@ router.post("/attendance", attendanceController_1.attendanceController.create);
 router.get("/attendance", attendanceController_1.attendanceController.getAll);
 router.get("/attendance/accumulation", attendanceController_1.attendanceController.getAccumulation);
 router.get("/attendance/student/:studentId/accumulation", attendanceController_1.attendanceController.getStudentAccumulation);
-router.put("/attendance/:id", attendanceController_1.attendanceController.update);
+router.put("/attendance", attendanceController_1.attendanceController.update);
 exports.default = router;

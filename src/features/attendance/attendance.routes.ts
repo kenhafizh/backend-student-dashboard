@@ -10,6 +10,6 @@ router.get(
   "/attendance/student/:studentId/accumulation",
   attendanceController.getStudentAccumulation,
 );
-router.put("/attendance/:id", attendanceController.update);
+router.put("/attendance", attendanceController.update);
 
 export default router;

@@ -9,6 +9,7 @@ interface CreateAttendanceInput {
 }
 
 interface UpdateAttendanceInput {
+  id: string;
   status?: Status;
   date?: string | Date;
 }
@@ -194,28 +195,41 @@ const createAttendance = async (input: CreateAttendanceInput) => {
   };
 };
 
-const updateAttendance = async (id: string, input: UpdateAttendanceInput) => {
-  const existing = await attendanceRepository.findById(id);
-  if (!existing) {
-    throw new Error("Data absensi tidak ditemukan");
+const updateAttendance = async (inputs: UpdateAttendanceInput[]) => {
+  if (!Array.isArray(inputs) || inputs.length === 0) {
+    throw new Error("Data absensi yang ingin diperbarui wajib diisi");
   }
 
-  const updateData: { status?: Status; date?: Date } = {};
+  const results = [];
+  for (const input of inputs) {
+    const { id } = input;
+    if (!id) {
+      throw new Error("Field 'id' wajib diisi pada setiap data absensi");
+    }
 
-  if (input.status) updateData.status = input.status;
-  if (input.date) updateData.date = new Date(input.date);
+    const existing = await attendanceRepository.findById(id);
+    if (!existing) {
+      throw new Error(`Data absensi dengan ID '${id}' tidak ditemukan`);
+    }
 
-  const attendance = await attendanceRepository.update(id, updateData);
+    const updateData: { status?: Status; date?: Date } = {};
+    if (input.status) updateData.status = input.status;
+    if (input.date) updateData.date = new Date(input.date);
 
-  return {
-    id: attendance.id,
-    studentId: attendance.studentId,
-    name: attendance.student.name,
-    nis: attendance.student.nis,
-    class: attendance.student.classId,
-    status: attendance.status,
-    date: attendance.date,
-  };
+    const attendance = await attendanceRepository.update(id, updateData);
+
+    results.push({
+      id: attendance.id,
+      studentId: attendance.studentId,
+      name: attendance.student.name,
+      nis: attendance.student.nis,
+      class: attendance.student.classId,
+      status: attendance.status,
+      date: attendance.date,
+    });
+  }
+
+  return results;
 };
 
 const getAttendanceAccumulation = async (

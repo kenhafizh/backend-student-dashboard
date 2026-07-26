@@ -25,12 +25,16 @@ const findByIds = async (ids) => {
     });
 };
 const findByStudentIdsAndDate = async (studentIds, date) => {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
     return db_1.prisma.attendance.findMany({
         where: {
             studentId: { in: studentIds },
             date: {
-                gte: new Date(date.setHours(0, 0, 0, 0)),
-                lt: new Date(date.setHours(23, 59, 59, 999)),
+                gte: startOfDay,
+                lte: endOfDay,
             },
         },
         include: { student: true },

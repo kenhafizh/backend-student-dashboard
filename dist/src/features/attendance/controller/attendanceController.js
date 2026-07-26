@@ -72,8 +72,7 @@ exports.attendanceController = {
     },
     update: async (req, res) => {
         try {
-            const { id } = req.params;
-            const attendance = await (0, attendanceService_1.updateAttendance)(id, req.body);
+            const attendance = await (0, attendanceService_1.updateAttendance)(req.body);
             res.send({
                 message: "Absensi berhasil diperbarui",
                 data: attendance,
