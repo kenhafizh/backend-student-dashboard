@@ -6,16 +6,12 @@ const connectionString = process.env.DATABASE_URL!;
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-const classData = [
-	{ name: "7A" },
-	{ name: "7B" },
-	{ name: "7C" },
-	{ name: "7D" },
-	{ name: "7E" },
-	{ name: "7F" },
-	{ name: "7G" },
-	{ name: "7H" },
-];
+const grades = ["7", "8", "9"];
+const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+
+const classData = grades.flatMap((grade) =>
+	sections.map((section) => ({ name: `${grade}${section}` })),
+);
 
 async function main() {
 	console.log("Seeding classes...");
