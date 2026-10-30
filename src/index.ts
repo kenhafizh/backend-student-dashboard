@@ -39,6 +39,10 @@ app.use(classRoutes);
 app.use(dashboardRoutes);
 app.use(recapitulationRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+export default app;
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}

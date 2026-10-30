@@ -1,6 +1,68 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../../../db");
+const DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const MONTH_NAMES = [
+    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+    "Jul", "Agu", "Sep", "Okt", "Nov", "Des",
+];
+const getWeeklyAttendance = async () => {
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    const dayOffset = (now.getDay() + 6) % 7; // Senin sebagai awal minggu
+    startOfWeek.setDate(now.getDate() - dayOffset);
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    const attendances = await db_1.prisma.attendance.findMany({
+        where: {
+            date: {
+                gte: startOfWeek,
+                lt: endOfWeek,
+            },
+        },
+    });
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+        const day = new Date(startOfWeek);
+        day.setDate(startOfWeek.getDate() + i);
+        const nextDay = new Date(day);
+        nextDay.setDate(day.getDate() + 1);
+        const dayAttendances = attendances.filter((a) => a.date >= day && a.date < nextDay);
+        days.push({
+            date: day.toISOString().slice(0, 10),
+            day: DAY_NAMES[day.getDay()],
+            hadir: dayAttendances.filter((a) => a.status === "HADIR").length,
+            sakit: dayAttendances.filter((a) => a.status === "SAKIT").length,
+            izin: dayAttendances.filter((a) => a.status === "IZIN").length,
+            alpha: dayAttendances.filter((a) => a.status === "ALPHA").length,
+        });
+    }
+    return days;
+};
+const getMonthlyAttendanceTrend = async (year) => {
+    const startOfYear = new Date(year, 0, 1);
+    const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999);
+    const attendances = await db_1.prisma.attendance.findMany({
+        where: {
+            date: {
+                gte: startOfYear,
+                lte: endOfYear,
+            },
+        },
+    });
+    const months = [];
+    for (let i = 0; i < 12; i++) {
+        const monthAttendances = attendances.filter((a) => a.date.getMonth() === i);
+        const hadir = monthAttendances.filter((a) => a.status === "HADIR").length;
+        const total = monthAttendances.length;
+        months.push({
+            month: MONTH_NAMES[i],
+            presentPercentage: total > 0 ? Math.round((hadir / total) * 100) : 0,
+        });
+    }
+    return months;
+};
 const getDashboardSummary = async () => {
     const totalStudents = await db_1.prisma.student.count();
     const today = new Date();
@@ -33,14 +95,20 @@ const getDashboardSummary = async () => {
         className: a.student.class?.name || "-",
         status: a.status,
     }));
+    const weeklyAttendance = await getWeeklyAttendance();
+    const monthlyAttendanceTrend = await getMonthlyAttendanceTrend(today.getFullYear());
     return {
         totalStudents,
         totalPresentToday: totalPresent,
         totalAbsentToday: totalAbsent,
         totalViolations,
         absentStudentsToday,
+        weeklyAttendance,
+        monthlyAttendanceTrend,
     };
 };
 exports.default = {
     getDashboardSummary,
+    getWeeklyAttendance,
+    getMonthlyAttendanceTrend,
 };
